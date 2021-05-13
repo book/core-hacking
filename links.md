@@ -13,7 +13,7 @@ PB | EH | link
 &#10003; | &#10003; | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-2.html>
 &#10003; | &#10003; | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-3.html>
 &#10003; | &#10003; | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-4.html>
- &nbsp; |  | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-5.html>
+&#10003; |  | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-5.html>
  &nbsp; |  | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-6.html>
  &nbsp; |  | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-7.html>
  &nbsp; |  | <https://leonerds-code.blogspot.com/2021/02/writing-perl-core-feature-part-8.html>
@@ -32,7 +32,7 @@ PB | EH | link
 PB | EH | link
 -----|-----|-----
  &nbsp; |  | <https://leonerds-code.blogspot.com/2016/08/perl-parser-plugins-part-1.html>
- &nbsp; |  | <http://leonerds-code.blogspot.com/2016/08/perl-parser-plugins-part-2.html>
+ &nbsp; |  | <https://leonerds-code.blogspot.com/2016/08/perl-parser-plugins-part-2.html>
  &nbsp; |  | <https://leonerds-code.blogspot.com/2016/09/perl-parser-plugins-3-optrees.html>
  &nbsp; |  | <https://leonerds-code.blogspot.com/2019/09/perl-parser-plugins-3a-stack.html>
 
