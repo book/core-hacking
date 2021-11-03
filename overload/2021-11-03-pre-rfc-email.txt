@@ -1,0 +1,49 @@
+Subject: Pre-RFC: Support overloaded objects in join(), substr() builtins
+
+The perl builtins like substr, join, etc. when operating on overloaded
+objects will stringify them and the result will no longer be an object
+of the class with overloads, even if the concat function is overloaded.
+
+For instance, if we have a class which defines overloads for both
+stringification and concat, some operations will result in new objects
+of the class, however others will not when we expect them to.
+
+It would be reasonable to expect these two lines of code to return the
+same result:
+
+    ```perl
+    # this reduce works as expected with an overloaded concat
+    my $ret = reduce { ( $a . $sep ) . $b } @list;
+
+    # this join() surprisingly uses stringification of $sep,
+    # even when concat is overloaded
+    my $ret = join $sep, @list;
+    ```
+
+The reason they do not is that join() invokes stringification, but
+should use concat when that function is overloaded by the class of
+the object.
+
+Similarly, the substr() builtin is not overloadable and it should be.
+
+    ```perl
+    use v5.32;
+    my $obj1 = OverloadedSubstr->new( "foo" );
+    my $obj2 = substr( $obj1, 1, 1 );
+    $obj2 eq 'o';               # true
+    $obj2 isa OverloadedSubstr; # should be true, but is false
+    ```
+
+If overload included a notion of substr, the package overload::substr
+would no longer be needed. https://metacpan.org/pod/overload::substr
+
+In an email conversation, Paul "LeoNerd" Evans wrote the following
+regarding overload::substr
+
+> the only reason I made that module in the first place is exactly
+> because substr() doesn't support overloading - the module provides
+> a monkeypatch to the core OP_SUBSTR to enable it.
+
+Thank you and any feedback is welcome.
+
+
