@@ -3,13 +3,14 @@
 ## Preamble
 
     Authors: Eric Herman <eric@freesa.org>, Philippe Bruhat <book@cpan.org>
-    Sponsor: Paul Evans <leonerd@leonerd.org.uk> 
-    ID:      
+    Sponsor: Paul Evans <leonerd@leonerd.org.uk>
+    ID:
     Status:  Draft
 
 ## Abstract
 
-Today, `overload` is incomplete and surprising for string operations:
+As of Perl version 5.34, `overload` is incomplete and surprising for
+string operations:
 
 * the `join` builtin should be using the `concat` (`.`) overload
   when operating on overloaded objects (including the separator),
@@ -26,7 +27,7 @@ the `substr` operation.
 
 The current behaviour is inconsistent and confusing.
 
-There is at least one CPAN module which works around the join
+There is at least one CPAN module which works around the `join`
 deficiency, (the [`join` function of
 `String::Tagged`](https://metacpan.org/pod/String::Tagged#join), but not
 universally.
@@ -86,52 +87,68 @@ We do not yet foresee security issues. Guidance is welcome.
 
 ## Examples
 
+For join():
+
     ```perl
-    # this reduce works as expected with an overloaded concat
-    my $ret = reduce { ( $a . $sep ) . $b } @list;
-
-    # this join() surprisingly uses stringification of $sep,
-    # even when concat is overloaded
+    # when @list contains elements with concat overloading,
+    # we expect this code:
     my $ret = join $sep, @list;
+
+    # to behave like this code:
+    my $ret = reduce { ( $a . $sep ) . $b } @list;
     ```
-===== WE LEFT OFF HERE =====
 
-PEPs have this as "How to Teach This". That's a valid goal, but there are different audiences (from newcomers, to experienced Perl programmers unfamiliar with your plan).
+For substr(), the "overload::substr" will be the guide for an initial
+implementation. Its documentation includes the following example:
 
-Most of us are not experienced teachers, but many folks reading your RFC are experienced programmers. So probably the best way to demonstrate the benefits of your proposal is to take some existing code in the core or on CPAN (and not your own code) and show how using your new feature can improve it (easier to read, less buggy, etc)
+    package My::Stringlike::Object;
+
+    use overload::substr;
+
+    sub _substr
+    {
+       my $self = shift;
+       if( @_ > 2 ) {
+          $self->replace_substr( @_ );
+       }
+       else {
+          return $self->get_substr( @_ );
+       }
+    }
 
 ## Prototype Implementation
 
-Is there something that shows the idea is feasible, and lets other people
-play with it? Such as
-
-* A module on CPAN
-* A source filter
-* Hack the core C code - fails tests, but lets folks play
+For `substr`: <https://metacpan.org/pod/overload::substr>.
 
 ## Future Scope
 
-Were there any ideas or variations considered that seemed reasonable follow-ons from the initial suggestions, that we don't need to do now, but want to revisit in the future? If there are parts of the design marked as "intended for future expansion", then give an idea here of what direction is planned.
+Looking at perlfunc, we find numerous builtins which, when applied
+on a string, will return a modified version of the string. Each of these
+is worthy of discussion:
 
-If that future expansion relies on extending the syntax, then ensure that the first implementation has tests to assert that the extended syntax remains a syntax error.
+* `chomp`
+* `chop`
+* `fc`
+* `lc`
+* `lcfirst`
+* `quotemeta`
+* `reverse`
+* `split`
+* `tr///` and `y///`
+* `uc`
+* `ucfirst`
 
 ## Rejected Ideas
 
-Why this solution/this syntax was better than the obvious alternatives.
-
-We've seen before that there will be **F**requently **A**sked **Q**uestions.
-eg *Why not have different behaviour in void context?*
-
-Likely the answer is in the previous discussion **somewhere**, but most people won't stop to read all the comments. It needs to be easy to find, and updated as it becomes clear which questions are common.
-
-Hence it **needs** to be in the RFC itself. Without this, the RFC process as a whole won't scale.
+Not applicable.
 
 ## Open Issues
 
-Use this to summarise any points that are still to be resolved.
+None yet.
 
 ## Copyright
 
-Copyright (C) 2038, A.U. Thor.
+Copyright (C) 2021, Philippe Bruhat and Eric Herman.
 
-This document and code and documentation within it may be used, redistributed and/or modified under the same terms as Perl itself.
+This document and code and documentation within it may be used,
+redistributed and/or modified under the same terms as Perl itself.
